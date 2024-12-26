@@ -3,8 +3,14 @@ name: Validate HTML Assignment
 on:
   workflow_dispatch:
     inputs:
-      student_code:
-        description: "HTML code submitted by the student"
+      student_id:
+        description: "The ID of the student"
+        required: true
+      assignment:
+        description: "The assignment name"
+        required: true
+      code:
+        description: "The student's code submission"
         required: true
 
 jobs:
@@ -15,17 +21,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set Up Environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y tidy
-
       - name: Save Submitted Code
-        run: echo "${{ github.event.inputs.student_code }}" > student_code.html
+        run: echo "${{ github.event.inputs.code }}" > student_code.html
 
       - name: Validate HTML
         run: |
           tidy -q -e student_code.html || echo "Validation failed!"
 
       - name: Log Validation Result
-        run: echo "HTML validation complete. Check the logs for errors."
+        run: echo "Validation completed for ${{ github.event.inputs.student_id }}."
