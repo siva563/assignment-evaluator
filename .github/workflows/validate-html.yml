@@ -1,7 +1,11 @@
 name: Validate HTML Assignment
 
 on:
-  workflow_dispatch: # Trigger workflow manually or via API
+  workflow_dispatch:
+    inputs:
+      student_code:
+        description: "HTML code submitted by the student"
+        required: true
 
 jobs:
   validate-html:
@@ -14,10 +18,10 @@ jobs:
       - name: Set Up Environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y tidy # Install the HTML validator
+          sudo apt-get install -y tidy
 
       - name: Save Submitted Code
-        run: echo "<html><body><h1>Hello, World!</h1></body></html>" > student_code.html
+        run: echo "${{ github.event.inputs.student_code }}" > student_code.html
 
       - name: Validate HTML
         run: |
