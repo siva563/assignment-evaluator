@@ -1,0 +1,27 @@
+name: Validate HTML Assignment
+
+on:
+  workflow_dispatch: # Trigger workflow manually or via API
+
+jobs:
+  validate-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up Environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tidy # Install the HTML validator
+
+      - name: Save Submitted Code
+        run: echo "<html><body><h1>Hello, World!</h1></body></html>" > student_code.html
+
+      - name: Validate HTML
+        run: |
+          tidy -q -e student_code.html || echo "Validation failed!"
+
+      - name: Log Validation Result
+        run: echo "HTML validation complete. Check the logs for errors."
